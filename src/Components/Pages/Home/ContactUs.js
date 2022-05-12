@@ -7,8 +7,8 @@ const ContactUs = () => {
             backgroundSize : 'cover' 
         }}>
             <form>
-            <input type="text" placeholder="Type here" class="input w-full max-w-xs" />
-            <input type="text" placeholder="Type here" class="input w-full max-w-xs" />
+            <input type="text" placeholder="Type here" className="input w-full max-w-xs" />
+            <input type="text" placeholder="Type here" className="input w-full max-w-xs" />
             </form>
         </section>
     );

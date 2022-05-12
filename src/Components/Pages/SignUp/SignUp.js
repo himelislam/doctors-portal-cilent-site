@@ -1,54 +1,69 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import auth from '../../../firebase.init';
-import { useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import { useCreateUserWithEmailAndPassword, useSignInWithGoogle, useUpdateProfile } from 'react-firebase-hooks/auth';
 import { useForm } from "react-hook-form";
 import Loading from '../Shared/Loading';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-const Login = () => {
-    const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
+const SignUp = () => {
+    const navigate = useNavigate()
+    const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
+    const [updateProfile, updating, dError] = useUpdateProfile(auth);
     const [
-        signInWithEmailAndPassword,
-        user1,
-        loading1,
-        error1,
-    ] = useSignInWithEmailAndPassword(auth);
+        createUserWithEmailAndPassword,
+        user,
+        loading,
+        error,
+      ] = useCreateUserWithEmailAndPassword(auth);
 
     const { register, formState: { errors }, handleSubmit } = useForm();
 
-    const onSubmit = data => {
-        signInWithEmailAndPassword(data.email, data.password);
+    const onSubmit = async data => {
+        console.log(data);
+        await createUserWithEmailAndPassword(data.email, data.password);
+        await updateProfile({displayName : data.name})
+        navigate('/appointment')
     }
 
-    
-    let signInError;
-    const navigate = useNavigate()
-    const location = useLocation()
-    
-    const from = location.state?.from?.pathname || '/';
-    
-    useEffect(()=>{
-        if (user || user1) {
-            navigate(from, {replace : true});
-        }
-    },[user, user1, navigate, from]);
+    let signUpError;
 
-
-    if (error || error1) {
-        signInError = <p className='text-red-600'><small>{error?.message || error1?.message}</small></p>
+    if (error || gError || dError) {
+        signUpError = <p className='text-red-600'><small>{error?.message || gError?.message}</small></p>
     }
 
-    if (loading || loading1) {
+    if (loading || gLoading) {
        return <Loading></Loading>
     }
 
-    
+    if (user || gUser) {
+        console.log(user,gUser);
+    }
     return (
         <div className='flex h-screen items-center justify-center'>
             <div className="card w-96 bg-base-100 shadow-xl">
                 <div className="card-body">
-                    <h2 className="text-center text-2xl font-bold">Login</h2>
+                    <h2 className="text-center text-2xl font-bold">Sign Up</h2>
                     <form onSubmit={handleSubmit(onSubmit)}>
+                        <div className="form-control w-full max-w-xs">
+                            <label className="label">
+                                <span className="label-text">Name</span>
+                            </label>
+                            <input
+                                type="text"
+                                placeholder="Your Name"
+                                className="input input-bordered w-full max-w-xs"
+                                {...register("name", {
+                                    required: {
+                                        value: true,
+                                        message: 'name is Required'
+                                    }
+                                })}
+                            />
+                            <label className="label">
+                                {errors.name?.type === 'required' && <span className="label-text-alt text-red-600">{errors.name.message}</span>}
+
+                            </label>
+                        </div>
                         <div className="form-control w-full max-w-xs">
                             <label className="label">
                                 <span className="label-text">Email</span>
@@ -99,10 +114,10 @@ const Login = () => {
 
                             </label>
                         </div>
-                                {signInError}
-                        <input className='btn w-full max-w-xs text-white' type="submit" value='Login' />
+                                {signUpError}
+                        <input className='btn w-full max-w-xs text-white' type="submit" value='Sign Up' />
                     </form>
-                    <p><small>New to Doctors Portal? <Link to='/signUp' className='text-primary'>Create New Account</Link></small></p>
+                    <p><small>Already Have an Account? <Link to='/login' className='text-primary'>Please Login</Link></small></p>
                     <div className="divider">OR</div>
                     <button onClick={() => signInWithGoogle()} className="btn btn-outline">Conitnue With Google</button>
                 </div>
@@ -111,4 +126,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default SignUp;
