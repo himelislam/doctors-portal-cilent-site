@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import auth from '../../../firebase.init';
 
-const BookingModal = ({ treatment, date, setTreatment }) => {
+const BookingModal = ({ treatment, date, setTreatment, refetch}) => {
     const { _id, name, slots } = treatment;
     const [user] = useAuthState(auth);
     const formattedDate = format(date, 'PP')
@@ -36,11 +36,12 @@ const BookingModal = ({ treatment, date, setTreatment }) => {
             console.log(data);
             if(data.success){
                 alert('success')
-                setTreatment(null)
             }
             else{
                 alert('failed')
             }
+            setTreatment(null)
+            refetch()
         })
 
     }
