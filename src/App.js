@@ -5,8 +5,10 @@ import Appointment from './Components/Pages/Appointment/Appointment';
 import Dashboard from './Components/Pages/Dashboard/Dashboard';
 import MyAppointment from './Components/Pages/Dashboard/MyAppointment';
 import MyReview from './Components/Pages/Dashboard/MyReview';
+import Users from './Components/Pages/Dashboard/Users';
 import Home from './Components/Pages/Home/Home';
 import Login from './Components/Pages/Login/Login';
+import RequireAdmin from './Components/Pages/Login/RequireAdmin';
 import RequireAuth from './Components/Pages/Login/RequireAuth';
 import Footer from './Components/Pages/Shared/Footer';
 import Navbar from './Components/Pages/Shared/Navbar';
@@ -30,6 +32,7 @@ function App() {
         }>
           <Route index element={<MyAppointment></MyAppointment>}></Route>
           <Route path='myReview' element={<MyReview></MyReview>}></Route>
+          <Route path='users' element={<RequireAdmin><Users></Users></RequireAdmin>}></Route>
         </Route>
         <Route path='about' element={<About></About>}></Route>
         <Route path='login' element={<Login></Login>}></Route>
