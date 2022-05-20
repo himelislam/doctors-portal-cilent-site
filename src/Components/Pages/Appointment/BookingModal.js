@@ -4,7 +4,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import auth from '../../../firebase.init';
 
 const BookingModal = ({ treatment, date, setTreatment, refetch}) => {
-    const { _id, name, slots } = treatment;
+    const { _id, name, slots, price } = treatment;
     const [user] = useAuthState(auth);
     const formattedDate = format(date, 'PP')
 
@@ -18,7 +18,8 @@ const BookingModal = ({ treatment, date, setTreatment, refetch}) => {
             treatmentId : _id,
             treatment : name,
             date : formattedDate,
-            slot, 
+            slot,
+            price, 
             patient : user.email,
             patientName : user.displayName,
             phone : event.target.phone.value
@@ -64,6 +65,7 @@ const BookingModal = ({ treatment, date, setTreatment, refetch}) => {
                         </select>
                         <input type="text" name='name' disabled value={user?.displayName || ''} className="input input-bordered w-full max-w-xs" />
                         <input type="text" name='email' disabled value={user?.email || ''} className="input input-bordered w-full max-w-xs" />
+                        <input type="text" name='price' disabled value={price} className="input input-bordered w-full max-w-xs" />
                         <input type="number" name='phone' placeholder="Your Number" className="input input-bordered w-full max-w-xs" />
                         <input type="submit" value='Submit' className="btn btn-secondary text-white w-full max-w-xs" />
                     </form>
